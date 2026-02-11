@@ -4,34 +4,44 @@ import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
-// 1. Zoom'u engelleyen kritik ayarlar
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
   userScalable: false,
-  themeColor: "#b00020", // Mobil tarayıcı çubuğu rengi
+  themeColor: "#b00020",
+  viewportFit: "cover",
 };
 
-// 2. Uygulama meta bilgileri
 export const metadata: Metadata = {
-  title: "Chef",
-  description: "Profesyonel yemek yapma deneyimi",
+  title: "Chef | Dijital Mutfak",
+  description: "Şefin Gizli Silahı",
+  manifest: "/manifest.json",
+
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
     title: "Chef",
   },
+
+  formatDetection: {
+    telephone: false,
+  },
+
+  icons: {
+    icon: "/icon-192.png",
+    apple: "/icon-192.png",
+  },
 };
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
-    <html lang="tr" className="selection:bg-red-200">
-      <body className={`${inter.className} overflow-hidden fixed inset-0 w-full h-full`}>
+    <html lang="tr">
+      <body className={`${inter.className} bg-black min-h-screen`}>
         {children}
       </body>
     </html>
