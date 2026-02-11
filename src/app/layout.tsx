@@ -1,23 +1,27 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import type { Metadata, Viewport } from "next";
+import { Inter } from "next/font/google";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
+const inter = Inter({ subsets: ["latin"] });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+// 1. Zoom'u engelleyen kritik ayarlar
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+  themeColor: "#b00020", // Mobil tarayıcı çubuğu rengi
+};
 
-export const metadata = {
-  title: "Mutfak Asistanı",
-  description: "Şef Asistan Uygulaması",
-  manifest: "/manifest.json",
-  themeColor: "#b00020",
-  viewport: "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0",
+// 2. Uygulama meta bilgileri
+export const metadata: Metadata = {
+  title: "Chef",
+  description: "Profesyonel yemek yapma deneyimi",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "Chef",
+  },
 };
 
 export default function RootLayout({
@@ -26,13 +30,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+    <html lang="tr" className="selection:bg-red-200">
+      <body className={`${inter.className} overflow-hidden fixed inset-0 w-full h-full`}>
         {children}
       </body>
     </html>
   );
 }
-

@@ -1,88 +1,83 @@
 "use client";
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
+import { useChefStore } from '@/store/useChefStore';
 
-export const TimerElement = ({ totalSeconds, onTimerEnd }: { totalSeconds: number, onTimerEnd?: (isEnded: boolean) => void }) => {
-  const [remaining, setRemaining] = useState(totalSeconds);
-  const [isRunning, setIsRunning] = useState(false);
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
+export const TimerElement = ({ totalSeconds }: { totalSeconds: number }) => {
+  const { 
+    timerEndTimestamp, 
+    isTimerActive, 
+    startGlobalTimer, 
+    pauseGlobalTimer, 
+    pausedRemainingSeconds, 
+    isDarkMode 
+  } = useChefStore();
 
-  // Güvenli bildirim: Render sırasında değil, render sonrası haber ver
+  const [displaySeconds, setDisplaySeconds] = useState(totalSeconds);
+
   useEffect(() => {
-    setRemaining(totalSeconds);
-    setIsRunning(false);
-    if (onTimerEnd) onTimerEnd(false); 
-    
-    return () => { if (timerRef.current) clearInterval(timerRef.current); };
-  }, [totalSeconds]); // onTimerEnd'i buraya eklemiyoruz ki sonsuz döngü olmasın
+    let interval: NodeJS.Timeout;
 
-  const playDing = () => {
-    try {
-      const context = new (window.AudioContext || (window as any).webkitAudioContext)();
-      const frequencies = [880, 1760];
-      frequencies.forEach((freq, index) => {
-        const oscillator = context.createOscillator();
-        const gain = context.createGain();
-        oscillator.type = "sine";
-        oscillator.frequency.setValueAtTime(freq, context.currentTime);
-        gain.gain.setValueAtTime(index === 0 ? 0.3 : 0.15, context.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, context.currentTime + 1.5);
-        oscillator.connect(gain); gain.connect(context.destination);
-        oscillator.start(); oscillator.stop(context.currentTime + 1.5);
-      });
-    } catch (e) { console.error(e); }
+    if (isTimerActive && timerEndTimestamp) {
+      interval = setInterval(() => {
+        const remaining = Math.max(0, Math.ceil((timerEndTimestamp - Date.now()) / 1000));
+        setDisplaySeconds(remaining);
+        // Alert buradaydı, sildik. Artık page.tsx göz kulak oluyor.
+      }, 100);
+    } else {
+      setDisplaySeconds(pausedRemainingSeconds !== null ? pausedRemainingSeconds : totalSeconds);
+    }
+
+    return () => clearInterval(interval);
+  }, [isTimerActive, timerEndTimestamp, totalSeconds, pausedRemainingSeconds]);
+
+  const toggleTimer = () => {
+    if (isTimerActive) {
+      pauseGlobalTimer(displaySeconds);
+    } else {
+      startGlobalTimer(displaySeconds);
+    }
   };
 
-  const startTimer = () => {
-    if (isRunning || remaining <= 0) return;
-    setIsRunning(true);
-    timerRef.current = setInterval(() => {
-      setRemaining((prev) => {
-        if (prev <= 1) {
-          if (timerRef.current) clearInterval(timerRef.current);
-          setIsRunning(false);
-          playDing();
-          if (onTimerEnd) onTimerEnd(true); // Süre bittiğinde haber ver
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
-  };
-
-  const stopTimer = () => {
-    if (timerRef.current) clearInterval(timerRef.current);
-    setIsRunning(false);
-  };
-
-  const format = (s: number) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
-  const progress = 1 - (remaining / totalSeconds);
+  const circleRadius = 70;
+  const circumference = 2 * Math.PI * circleRadius;
+  const progress = totalSeconds > 0 ? ((totalSeconds - displaySeconds) / totalSeconds) * circumference : 0;
 
   return (
-    <div className="flex flex-col items-center gap-4 my-2 w-full scale-90">
-      <div className="relative w-48 h-48 flex items-center justify-center">
-        <svg width="200" height="200" className="transform -rotate-90">
-          <circle cx="100" cy="100" r="90" fill="none" stroke="#fee2e2" strokeWidth="12" />
-          <motion.circle
-            cx="100" cy="100" r="90" fill="none" stroke="#b00020" strokeWidth="12"
-            strokeLinecap="round"
-            strokeDasharray={2 * Math.PI * 90}
-            animate={{ strokeDashoffset: (2 * Math.PI * 90) * progress }}
-            transition={{ duration: 1, ease: "linear" }}
-          />
-        </svg>
-        <div className="absolute text-5xl font-black text-slate-900">{format(remaining)}</div>
-      </div>
+    <div className="relative flex items-center justify-center w-48 h-48 my-4">
+      <svg className="w-full h-full transform -rotate-90 overflow-visible">
+        <circle 
+          cx="96" cy="96" r={circleRadius} 
+          stroke={isDarkMode ? "#18181b" : "#f1f5f9"} 
+          strokeWidth="8" fill="transparent" 
+        />
+        <motion.circle
+          cx="96" cy="96" r={circleRadius} 
+          stroke="#b00020" strokeWidth="8" fill="transparent"
+          strokeDasharray={circumference}
+          animate={{ strokeDashoffset: circumference - progress }}
+          transition={{ duration: 0.5, ease: "linear" }}
+          strokeLinecap="round"
+        />
+      </svg>
       
-      <div className="grid grid-cols-3 gap-2 w-full max-w-[260px]">
-        <button onClick={startTimer} disabled={isRunning || remaining === 0}
-          className={`py-3 rounded-xl font-black text-[10px] uppercase tracking-widest transition-all
-            ${remaining === 0 ? 'bg-slate-100 text-slate-400' : isRunning ? 'bg-slate-100 text-slate-400' : 'bg-[#b00020] text-white shadow-md'}`}
+      <div className="absolute inset-0 flex flex-col items-center justify-center">
+        <span className={`text-4xl font-black tabular-nums transition-colors duration-300 ${
+          isDarkMode ? 'text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.2)]' : 'text-slate-900'
+        }`}>
+          {Math.floor(displaySeconds / 60)}:{(displaySeconds % 60).toString().padStart(2, '0')}
+        </span>
+        
+        <button
+          onClick={toggleTimer}
+          className={`mt-3 px-5 py-2 rounded-full text-[10px] font-black uppercase tracking-widest shadow-lg transition-all active:scale-95 ${
+            isTimerActive 
+              ? (isDarkMode ? 'bg-zinc-800 text-zinc-400 border border-zinc-700' : 'bg-slate-100 text-slate-400') 
+              : 'bg-[#b00020] text-white shadow-[#b00020]/20'
+          }`}
         >
-          {remaining === 0 ? 'BİTTİ' : 'BAŞLAT'}
+          {isTimerActive ? 'DURAKLAT' : 'BAŞLAT'}
         </button>
-        <button onClick={stopTimer} disabled={!isRunning} className="py-3 bg-white border border-slate-200 text-slate-500 rounded-xl font-bold text-[10px] uppercase">Durdur</button>
-        <button onClick={() => { stopTimer(); setRemaining(totalSeconds); if(onTimerEnd) onTimerEnd(false); }} className="py-3 bg-white border border-slate-200 text-slate-500 rounded-xl font-bold text-[10px] uppercase">Sıfırla</button>
       </div>
     </div>
   );
