@@ -2,18 +2,36 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 
-export const TimerElement = ({ totalSeconds }: { totalSeconds: number }) => {
+export const TimerElement = ({ totalSeconds, onTimerEnd }: { totalSeconds: number, onTimerEnd?: (isEnded: boolean) => void }) => {
   const [remaining, setRemaining] = useState(totalSeconds);
   const [isRunning, setIsRunning] = useState(false);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Yeni adım geldiğinde süreyi sıfırla
+  // Güvenli bildirim: Render sırasında değil, render sonrası haber ver
   useEffect(() => {
     setRemaining(totalSeconds);
     setIsRunning(false);
-    if (timerRef.current) clearInterval(timerRef.current);
+    if (onTimerEnd) onTimerEnd(false); 
+    
     return () => { if (timerRef.current) clearInterval(timerRef.current); };
-  }, [totalSeconds]);
+  }, [totalSeconds]); // onTimerEnd'i buraya eklemiyoruz ki sonsuz döngü olmasın
+
+  const playDing = () => {
+    try {
+      const context = new (window.AudioContext || (window as any).webkitAudioContext)();
+      const frequencies = [880, 1760];
+      frequencies.forEach((freq, index) => {
+        const oscillator = context.createOscillator();
+        const gain = context.createGain();
+        oscillator.type = "sine";
+        oscillator.frequency.setValueAtTime(freq, context.currentTime);
+        gain.gain.setValueAtTime(index === 0 ? 0.3 : 0.15, context.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, context.currentTime + 1.5);
+        oscillator.connect(gain); gain.connect(context.destination);
+        oscillator.start(); oscillator.stop(context.currentTime + 1.5);
+      });
+    } catch (e) { console.error(e); }
+  };
 
   const startTimer = () => {
     if (isRunning || remaining <= 0) return;
@@ -23,6 +41,8 @@ export const TimerElement = ({ totalSeconds }: { totalSeconds: number }) => {
         if (prev <= 1) {
           if (timerRef.current) clearInterval(timerRef.current);
           setIsRunning(false);
+          playDing();
+          if (onTimerEnd) onTimerEnd(true); // Süre bittiğinde haber ver
           return 0;
         }
         return prev - 1;
@@ -35,65 +55,35 @@ export const TimerElement = ({ totalSeconds }: { totalSeconds: number }) => {
     setIsRunning(false);
   };
 
-  const resetTimer = () => {
-    stopTimer();
-    setRemaining(totalSeconds);
-  };
-
   const format = (s: number) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
   const progress = 1 - (remaining / totalSeconds);
-  const circumference = 2 * Math.PI * 121;
 
   return (
-    <div className="flex flex-col items-center gap-8 my-6 w-full">
-      {/* İlerleme Halkası */}
-      <div className="relative w-64 h-64 flex items-center justify-center">
-        <svg width="260" height="260" className="transform -rotate-90">
-          <circle cx="130" cy="130" r="121" fill="none" stroke="#fee2e2" strokeWidth="16" />
+    <div className="flex flex-col items-center gap-4 my-2 w-full scale-90">
+      <div className="relative w-48 h-48 flex items-center justify-center">
+        <svg width="200" height="200" className="transform -rotate-90">
+          <circle cx="100" cy="100" r="90" fill="none" stroke="#fee2e2" strokeWidth="12" />
           <motion.circle
-            cx="130" cy="130" r="121" fill="none" stroke="#b00020" strokeWidth="16"
+            cx="100" cy="100" r="90" fill="none" stroke="#b00020" strokeWidth="12"
             strokeLinecap="round"
-            strokeDasharray={circumference}
-            animate={{ strokeDashoffset: circumference * progress }}
+            strokeDasharray={2 * Math.PI * 90}
+            animate={{ strokeDashoffset: (2 * Math.PI * 90) * progress }}
             transition={{ duration: 1, ease: "linear" }}
           />
         </svg>
-        <div className="absolute text-6xl font-black text-slate-900 drop-shadow-sm">
-          {format(remaining)}
-        </div>
+        <div className="absolute text-5xl font-black text-slate-900">{format(remaining)}</div>
       </div>
       
-      {/* 3'lü Buton Grubu */}
-      <div className="grid grid-cols-3 gap-3 w-full max-w-sm px-4">
-        <button 
-          onClick={startTimer} 
-          disabled={isRunning || remaining === 0}
-          className={`py-4 rounded-2xl font-black text-[10px] uppercase tracking-tighter transition-all shadow-md active:scale-95 ${isRunning ? 'bg-gray-100 text-gray-400' : 'bg-[#b00020] text-white'}`}
+      <div className="grid grid-cols-3 gap-2 w-full max-w-[260px]">
+        <button onClick={startTimer} disabled={isRunning || remaining === 0}
+          className={`py-3 rounded-xl font-black text-[10px] uppercase tracking-widest transition-all
+            ${remaining === 0 ? 'bg-slate-100 text-slate-400' : isRunning ? 'bg-slate-100 text-slate-400' : 'bg-[#b00020] text-white shadow-md'}`}
         >
-          Başlat
+          {remaining === 0 ? 'BİTTİ' : 'BAŞLAT'}
         </button>
-
-        <button 
-          onClick={stopTimer} 
-          disabled={!isRunning}
-          className={`py-4 rounded-2xl font-black text-[10px] uppercase tracking-tighter transition-all shadow-md active:scale-95 ${!isRunning ? 'bg-gray-100 text-gray-400' : 'bg-slate-800 text-white'}`}
-        >
-          Durdur
-        </button>
-
-        <button 
-          onClick={resetTimer} 
-          className="py-4 bg-white border-2 border-slate-200 text-slate-600 rounded-2xl font-black text-[10px] uppercase tracking-tighter shadow-sm active:scale-95"
-        >
-          Sıfırla
-        </button>
+        <button onClick={stopTimer} disabled={!isRunning} className="py-3 bg-white border border-slate-200 text-slate-500 rounded-xl font-bold text-[10px] uppercase">Durdur</button>
+        <button onClick={() => { stopTimer(); setRemaining(totalSeconds); if(onTimerEnd) onTimerEnd(false); }} className="py-3 bg-white border border-slate-200 text-slate-500 rounded-xl font-bold text-[10px] uppercase">Sıfırla</button>
       </div>
-
-      {remaining === 0 && (
-        <motion.div initial={{ scale: 0 }} animate={{ scale: 1.1 }} className="text-[#b00020] font-black text-lg animate-pulse">
-          Zaman Doldu! 🔔
-        </motion.div>
-      )}
     </div>
   );
 };
