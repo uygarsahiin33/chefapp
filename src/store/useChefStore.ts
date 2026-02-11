@@ -1,49 +1,56 @@
-// src/store/useChefStore.ts
 import { create } from 'zustand';
 
-type View = 'welcome' | 'cuisines' | 'recipes' | 'ingredients' | 'assistant' | 'done';
-
-interface ChefStore {
-  view: View;
+interface ChefState {
+  view: 'welcome' | 'ingredients' | 'assistant' | 'done';
   selectedRecipe: any | null;
   step: number;
   selectedIngredients: Record<string, boolean>;
   cuisineFilter: string;
   categoryFilter: string;
-  setView: (view: View) => void;
+  servings: number; // Yeni: Porsiyon sayısı
+  
+  setView: (view: ChefState['view']) => void;
   setRecipe: (recipe: any) => void;
-  toggleIngredient: (name: string) => void;
   setStep: (step: number) => void;
-  setCuisineFilter: (c: string) => void;
-  setCategoryFilter: (c: string) => void;
+  toggleIngredient: (name: string) => void;
+  setCuisineFilter: (filter: string) => void;
+  setCategoryFilter: (filter: string) => void;
+  setServings: (val: number) => void; // Yeni: Porsiyon ayarla
   resetApp: () => void;
 }
 
-export const useChefStore = create<ChefStore>((set) => ({
-  view: 'welcome', // Başlangıç ekranı
+export const useChefStore = create<ChefState>((set) => ({
+  view: 'welcome',
   selectedRecipe: null,
   step: 0,
   selectedIngredients: {},
   cuisineFilter: 'Hepsi',
   categoryFilter: 'Hepsi',
+  servings: 4, // Varsayılan başlangıç porsiyonu
+
   setView: (view) => set({ view }),
-  setRecipe: (recipe) => {
-    const init: Record<string, boolean> = {};
-    if (recipe.ingredients) {
-      recipe.ingredients.forEach((i: string) => (init[i] = false));
-    }
-    set({ 
-      selectedRecipe: recipe, 
-      selectedIngredients: init, 
-      view: 'ingredients', // Tarife basınca malzemelere git
-      step: 0 
-    });
-  },
-  toggleIngredient: (name) => set((state) => ({
-    selectedIngredients: { ...state.selectedIngredients, [name]: !state.selectedIngredients[name] }
-  })),
+  setRecipe: (recipe) => set({ 
+    selectedRecipe: recipe, 
+    view: 'ingredients', 
+    step: 0, 
+    selectedIngredients: {},
+    servings: 4 // Her tarif açıldığında 4'ten başlasın
+  }),
   setStep: (step) => set({ step }),
-  setCuisineFilter: (cuisineFilter) => set({ cuisineFilter }),
-  setCategoryFilter: (categoryFilter) => set({ categoryFilter }),
-  resetApp: () => set({ view: 'welcome', selectedRecipe: null, step: 0, selectedIngredients: {} }),
+  toggleIngredient: (name) => set((state) => ({
+    selectedIngredients: {
+      ...state.selectedIngredients,
+      [name]: !state.selectedIngredients[name]
+    }
+  })),
+  setCuisineFilter: (filter) => set({ cuisineFilter: filter }),
+  setCategoryFilter: (filter) => set({ categoryFilter: filter }),
+  setServings: (val) => set({ servings: val }),
+  resetApp: () => set({ 
+    view: 'welcome', 
+    selectedRecipe: null, 
+    step: 0, 
+    selectedIngredients: {},
+    servings: 4
+  }),
 }));
