@@ -1,15 +1,35 @@
 export const RECIPES = [
+  // --- TEST ---
+  {
+    id: "test",
+    name: "Test Tarifi",
+    cuisine: "Test",
+    category: "Test",
+    ingredients: [
+      { id: "test1", name: "Test Malzemesi 1", amount: 10, unit: "g" },
+      { id: "test2", name: "Test Malzemesi 2", amount: 1, unit: "adet" }
+    ],
+    steps: [
+      { text: "Biberleri doğrayıp yağda kavurun", timer: 5, requiredIngredients: ["test1", "test2"] },
+    ],
+  },
   // --- KAHVALTILIKLAR ---
   {
     id: "menemen",
     name: "Menemen",
     cuisine: "Türk",
     category: "Kahvaltı",
-    ingredients: ["Domates", "Biber", "Yumurta", "Yağ", "Tuz"],
+    ingredients: [
+      { id: "domates", name: "Domates", amount: 3, unit: "adet" },
+      { id: "biber", name: "Biber", amount: 2, unit: "adet" },
+      { id: "yumurta", name: "Yumurta", amount: 3, unit: "adet" },
+      { id: "yag", name: "Yağ", amount: 2, unit: "yemek kaşığı" },
+      { id: "tuz", name: "Tuz", amount: 1, unit: "çay kaşığı" }
+    ],
     steps: [
-      { text: "Biberleri doğrayıp yağda kavurun", timer: 180 },
-      { text: "Domatesleri ekleyip suyunu çekene kadar pişirin", timer: 300 },
-      { text: "Yumurtaları kırıp hafifçe karıştırın", timer: 120 },
+      { text: "Biberleri doğrayıp yağda kavurun", timer: 180, requiredIngredients: ["biber", "yag"] },
+      { text: "Domatesleri ekleyip suyunu çekene kadar pişirin", timer: 300, requiredIngredients: ["domates"] },
+      { text: "Yumurtaları kırıp hafifçe karıştırın", timer: 120, requiredIngredients: ["yumurta", "tuz"] },
     ],
   },
   {
@@ -17,11 +37,17 @@ export const RECIPES = [
     name: "Pancake",
     cuisine: "Amerikan",
     category: "Kahvaltı",
-    ingredients: ["Un", "Süt", "Yumurta", "Kabartma Tozu", "Şeker"],
+    ingredients: [
+      { id: "un", name: "Un", amount: 1.5, unit: "su bardağı" },
+      { id: "sut", name: "Süt", amount: 1, unit: "su bardağı" },
+      { id: "yumurta", name: "Yumurta", amount: 1, unit: "adet" },
+      { id: "kabartmatozu", name: "Kabartma Tozu", amount: 1, unit: "paket" },
+      { id: "seker", name: "Şeker", amount: 2, unit: "yemek kaşığı" }
+    ],
     steps: [
-      { text: "Tüm malzemeleri pürüzsüz olana kadar çırpın", timer: 180 },
-      { text: "Tavayı yağlayıp harçtan bir kepçe dökün", timer: 60 },
-      { text: "Üzeri göz göz olunca ters çevirip pişirin", timer: 60 },
+      { text: "Tüm malzemeleri pürüzsüz olana kadar çırpın", timer: 180, requiredIngredients: ["un", "sut", "yumurta", "kabartmatozu", "seker"] },
+      { text: "Tavayı yağlayıp harçtan bir kepçe dökün", timer: 60, requiredIngredients: [] },
+      { text: "Üzeri göz göz olunca ters çevirip pişirin", timer: 60, requiredIngredients: [] },
     ],
   },
   {
@@ -29,24 +55,34 @@ export const RECIPES = [
     name: "Sucuklu Yumurta",
     cuisine: "Türk",
     category: "Kahvaltı",
-    ingredients: ["Sucuk", "Yumurta", "Tereyağı", "Pul Biber"],
+    ingredients: [
+      { id: "sucuk", name: "Sucuk", amount: 100, unit: "g" },
+      { id: "yumurta", name: "Yumurta", amount: 2, unit: "adet" },
+      { id: "tereyag", name: "Tereyağı", amount: 1, unit: "yemek kaşığı" },
+      { id: "pulbiber", name: "Pul Biber", amount: 1, unit: "çay kaşığı" }
+    ],
     steps: [
-      { text: "Sucukları dilimleyip tereyağında önlü arkalı pişirin", timer: 120 },
-      { text: "Yumurtaları üzerine kırıp sarısını bozmadan pişirin", timer: 180 },
+      { text: "Sucukları dilimleyip tereyağında önlü arkalı pişirin", timer: 120, requiredIngredients: ["sucuk", "tereyag"] },
+      { text: "Yumurtaları üzerine kırıp sarısını bozmadan pişirin", timer: 180, requiredIngredients: ["yumurta", "pulbiber"] },
     ],
   },
-
-  // --- ANA YEMEKLER (ET & TAVUK) ---
+  // --- ANA YEMEKLER ---
   {
     id: "karniyarik",
     name: "Karnıyarık",
     cuisine: "Türk",
     category: "Ana Yemek",
-    ingredients: ["Patlıcan", "Kıyma", "Soğan", "Sarımsak", "Salça"],
+    ingredients: [
+      { id: "patlican", name: "Patlıcan", amount: 4, unit: "adet" },
+      { id: "kiyma", name: "Kıyma", amount: 250, unit: "g" },
+      { id: "sogan", name: "Soğan", amount: 1, unit: "adet" },
+      { id: "sarimsak", name: "Sarımsak", amount: 2, unit: "diş" },
+      { id: "salca", name: "Salça", amount: 1, unit: "yemek kaşığı" }
+    ],
     steps: [
-      { text: "Patlıcanları alacalı soyup yağda kızartın", timer: 600 },
-      { text: "İç harcı (kıyma, soğan, salça) kavurun", timer: 480 },
-      { text: "Patlıcanları doldurup fırında pişirin", timer: 1200 },
+      { text: "Patlıcanları alacalı soyup yağda kızartın", timer: 600, requiredIngredients: ["patlican"] },
+      { text: "İç harcı (kıyma, soğan, salça) kavurun", timer: 480, requiredIngredients: ["kiyma", "sogan", "sarimsak", "salca"] },
+      { text: "Patlıcanları doldurup fırında pişirin", timer: 1200, requiredIngredients: [] },
     ],
   },
   {
@@ -54,11 +90,17 @@ export const RECIPES = [
     name: "Chicken Alfredo",
     cuisine: "İtalyan",
     category: "Makarna",
-    ingredients: ["Fettuccine", "Tavuk Göğsü", "Krema", "Parmesan", "Sarımsak"],
+    ingredients: [
+      { id: "makarna", name: "Fettuccine", amount: 250, unit: "g" },
+      { id: "tavuk", name: "Tavuk Göğsü", amount: 300, unit: "g" },
+      { id: "krema", name: "Krema", amount: 200, unit: "ml" },
+      { id: "parmesan", name: "Parmesan", amount: 50, unit: "g" },
+      { id: "sarimsak", name: "Sarımsak", amount: 2, unit: "diş" }
+    ],
     steps: [
-      { text: "Makarnayı bol tuzlu suda haşlayın", timer: 600 },
-      { text: "Tavukları küp küp doğrayıp soteleyin", timer: 420 },
-      { text: "Krema ve peyniri ekleyip makarnayla birleştirin", timer: 180 },
+      { text: "Makarnayı bol tuzlu suda haşlayın", timer: 600, requiredIngredients: ["makarna"] },
+      { text: "Tavukları küp küp doğrayıp soteleyin", timer: 420, requiredIngredients: ["tavuk", "sarimsak"] },
+      { text: "Krema ve peyniri ekleyip makarnayla birleştirin", timer: 180, requiredIngredients: ["krema", "parmesan"] },
     ],
   },
   {
@@ -66,11 +108,17 @@ export const RECIPES = [
     name: "Renkli Tavuk Sote",
     cuisine: "Türk",
     category: "Ana Yemek",
-    ingredients: ["Tavuk Göğsü", "Renkli Biberler", "Soğan", "Domates", "Kekik"],
+    ingredients: [
+      { id: "tavuk", name: "Tavuk Göğsü", amount: 500, unit: "g" },
+      { id: "biber", name: "Renkli Biberler", amount: 3, unit: "adet" },
+      { id: "sogan", name: "Soğan", amount: 1, unit: "adet" },
+      { id: "domates", name: "Domates", amount: 2, unit: "adet" },
+      { id: "kekik", name: "Kekik", amount: 1, unit: "tatlı kaşığı" }
+    ],
     steps: [
-      { text: "Tavukları yüksek ateşte suyunu salıp çekene kadar pişirin", timer: 600 },
-      { text: "Sebzeleri ekleyip yumuşayana kadar soteleyin", timer: 300 },
-      { text: "Baharatları ekleyip son bir kez karıştırın", timer: 60 },
+      { text: "Tavukları yüksek ateşte suyunu salıp çekene kadar pişirin", timer: 600, requiredIngredients: ["tavuk"] },
+      { text: "Sebzeleri ekleyip yumuşayana kadar soteleyin", timer: 300, requiredIngredients: ["biber", "sogan", "domates"] },
+      { text: "Baharatları ekleyip son bir kez karıştırın", timer: 60, requiredIngredients: ["kekik"] },
     ],
   },
   {
@@ -78,51 +126,36 @@ export const RECIPES = [
     name: "Ev Yapımı Burger",
     cuisine: "Amerikan",
     category: "Ana Yemek",
-    ingredients: ["Burger Köftesi", "Burger Ekmeği", "Çedar Peyniri", "Marul", "Turşu"],
+    ingredients: [
+      { id: "kofte", name: "Burger Köftesi", amount: 2, unit: "adet" },
+      { id: "ekmek", name: "Burger Ekmeği", amount: 2, unit: "adet" },
+      { id: "peynir", name: "Çedar Peyniri", amount: 2, unit: "dilim" },
+      { id: "marul", name: "Marul", amount: 4, unit: "yaprak" },
+      { id: "tursu", name: "Turşu", amount: 1, unit: "adet" }
+    ],
     steps: [
-      { text: "Köfteleri döküm tavada mühürleyerek pişirin", timer: 480 },
-      { text: "Peynirleri üzerine koyup eritin", timer: 60 },
-      { text: "Ekmekleri ısıtıp malzemeleri dizin", timer: 120 },
+      { text: "Köfteleri döküm tavada mühürleyerek pişirin", timer: 480, requiredIngredients: ["kofte"] },
+      { text: "Peynirleri üzerine koyup eritin", timer: 60, requiredIngredients: ["peynir"] },
+      { text: "Ekmekleri ısıtıp malzemeleri dizin", timer: 120, requiredIngredients: ["ekmek", "marul", "tursu"] },
     ],
   },
-
-  // --- MAKARNA & PİZZA ---
-  {
-    id: "spaghetti-bolognese",
-    name: "Spagetti Bolonez",
-    cuisine: "İtalyan",
-    category: "Makarna",
-    ingredients: ["Spagetti", "Kıyma", "Havuç", "Kereviz Sapı", "Domates Sosu"],
-    steps: [
-      { text: "Sebzeleri ve kıymayı uzun süre kavurarak sosu hazırlayın", timer: 900 },
-      { text: "Makarnayı al dente kıvamında haşlayın", timer: 540 },
-      { text: "Sosu makarnanın üzerine döküp servis yapın", timer: 60 },
-    ],
-  },
-  {
-    id: "margarita-pizza",
-    name: "Pizza Margarita",
-    cuisine: "İtalyan",
-    category: "Hamur İşi",
-    ingredients: ["Pizza Hamuru", "Mozzarella", "Fesleğen", "Domates Sosu"],
-    steps: [
-      { text: "Hamuru açıp üzerine sosu yayın", timer: 300 },
-      { text: "Peynirleri dizip yüksek ısıda fırınlayın", timer: 600 },
-      { text: "Fırından çıkınca taze fesleğenleri ekleyin", timer: 30 },
-    ],
-  },
-
   // --- ÇORBALAR ---
   {
     id: "mercimek-corbasi",
     name: "Mercimek Çorbası",
     cuisine: "Türk",
     category: "Çorba",
-    ingredients: ["Kırmızı Mercimek", "Soğan", "Patates", "Havuç", "Tereyağı"],
+    ingredients: [
+      { id: "mercimek", name: "Kırmızı Mercimek", amount: 1, unit: "su bardağı" },
+      { id: "sogan", name: "Soğan", amount: 1, unit: "adet" },
+      { id: "patates", name: "Patates", amount: 1, unit: "adet" },
+      { id: "havuc", name: "Havuç", amount: 1, unit: "adet" },
+      { id: "tereyag", name: "Tereyağı", amount: 1, unit: "yemek kaşığı" }
+    ],
     steps: [
-      { text: "Tüm sebzeleri mercimekle birlikte düdüklüde pişirin", timer: 900 },
-      { text: "Blenderdan geçirip pürüzsüz yapın", timer: 120 },
-      { text: "Üzerine tereyağlı naneli sos yakın", timer: 60 },
+      { text: "Tüm sebzeleri mercimekle birlikte düdüklüde pişirin", timer: 900, requiredIngredients: ["mercimek", "sogan", "patates", "havuc"] },
+      { text: "Blenderdan geçirip pürüzsüz yapın", timer: 120, requiredIngredients: [] },
+      { text: "Üzerine tereyağlı naneli sos yakın", timer: 60, requiredIngredients: ["tereyag"] },
     ],
   },
   {
@@ -130,63 +163,36 @@ export const RECIPES = [
     name: "Köz Domates Çorbası",
     cuisine: "Türk",
     category: "Çorba",
-    ingredients: ["Domates", "Un", "Süt", "Kaşar Peyniri", "Tereyağı"],
+    ingredients: [
+      { id: "domates", name: "Domates", amount: 4, unit: "adet" },
+      { id: "un", name: "Un", amount: 2, unit: "yemek kaşığı" },
+      { id: "sut", name: "Süt", amount: 1, unit: "su bardağı" },
+      { id: "kasar", name: "Kaşar Peyniri", amount: 50, unit: "g" },
+      { id: "tereyag", name: "Tereyağı", amount: 1, unit: "yemek kaşığı" }
+    ],
     steps: [
-      { text: "Unu tereyağında kokusu çıkana kadar kavurun", timer: 180 },
-      { text: "Domates püresini ekleyip kaynatın", timer: 600 },
-      { text: "Sütü ekleyip bir taşım daha pişirin", timer: 120 },
+      { text: "Unu tereyağında kokusu çıkana kadar kavurun", timer: 180, requiredIngredients: ["un", "tereyag"] },
+      { text: "Domates püresini ekleyip kaynatın", timer: 600, requiredIngredients: ["domates"] },
+      { text: "Sütü ekleyip bir taşım daha pişirin", timer: 120, requiredIngredients: ["sut"] },
     ],
   },
-
-  // --- DÜNYA MUTFAĞI ---
-  {
-    id: "guacamole-taco",
-    name: "Etli Taco",
-    cuisine: "Meksika",
-    category: "Atıştırmalık",
-    ingredients: ["Taco Kabuğu", "Bonfile Dilimleri", "Avokado", "Kırmızı Soğan", "Kişniş"],
-    steps: [
-      { text: "Etleri yüksek ateşte hızla mühürleyin", timer: 300 },
-      { text: "Avokadoyu ezip sos haline getirin", timer: 180 },
-      { text: "Isınmış taco kabuklarına malzemeleri paylaştırın", timer: 120 },
-    ],
-  },
-  {
-    id: "sushi-roll",
-    name: "California Roll",
-    cuisine: "Japon",
-    category: "Uzak Doğu",
-    ingredients: ["Sushi Pirinci", "Nori", "Yengeç Çubuğu", "Avokado", "Salatalık"],
-    steps: [
-      { text: "Pirinci haşlayıp soğumaya bırakın", timer: 1200 },
-      { text: "Nori üzerine pirinci ve malzemeleri dizin", timer: 300 },
-      { text: "Bambu mat yardımıyla sıkıca sarın", timer: 180 },
-    ],
-  },
-  {
-    id: "pad-thai",
-    name: "Pad Thai",
-    cuisine: "Tayland",
-    category: "Uzak Doğu",
-    ingredients: ["Pirinç Eriştesi", "Karides", "Yer Fıstığı", "Yumurta", "Tamarind Sos"],
-    steps: [
-      { text: "Erişteleri sıcak suda bekletin", timer: 600 },
-      { text: "Karidesleri ve yumurtayı wok tavada pişirin", timer: 240 },
-      { text: "Tüm malzemeyi sosla birleştirip harmanlayın", timer: 180 },
-    ],
-  },
-
   // --- TATLILAR ---
   {
     id: "suffile",
     name: "Çikolatalı Sufle",
     cuisine: "Fransız",
     category: "Tatlı",
-    ingredients: ["Bitter Çikolata", "Tereyağı", "Yumurta", "Şeker", "Un"],
+    ingredients: [
+      { id: "cikolata", name: "Bitter Çikolata", amount: 100, unit: "g" },
+      { id: "tereyag", name: "Tereyağı", amount: 50, unit: "g" },
+      { id: "yumurta", name: "Yumurta", amount: 2, unit: "adet" },
+      { id: "seker", name: "Şeker", amount: 3, unit: "yemek kaşığı" },
+      { id: "un", name: "Un", amount: 1, unit: "yemek kaşığı" }
+    ],
     steps: [
-      { text: "Çikolata ve tereyağını benmari usulü eritin", timer: 300 },
-      { text: "Yumurta ve şekeri çırpıp çikolatayla karıştırın", timer: 180 },
-      { text: "Fırında dışı pişmiş içi akışkan kalana kadar tutun", timer: 480 },
+      { text: "Çikolata ve tereyağını benmari usulü eritin", timer: 300, requiredIngredients: ["cikolata", "tereyag"] },
+      { text: "Yumurta ve şekeri çırpıp çikolatayla karıştırın", timer: 180, requiredIngredients: ["yumurta", "seker", "un"] },
+      { text: "Fırında dışı pişmiş içi akışkan kalana kadar tutun", timer: 480, requiredIngredients: [] },
     ],
   },
   {
@@ -194,97 +200,36 @@ export const RECIPES = [
     name: "Muzlu Magnolia",
     cuisine: "Modern",
     category: "Tatlı",
-    ingredients: ["Süt", "Şeker", "Nişasta", "Bebek Bisküvisi", "Muz"],
+    ingredients: [
+      { id: "sut", name: "Süt", amount: 500, unit: "ml" },
+      { id: "seker", name: "Şeker", amount: 0.5, unit: "su bardağı" },
+      { id: "nisasta", name: "Nişasta", amount: 2, unit: "yemek kaşığı" },
+      { id: "biskuvi", name: "Bebek Bisküvisi", amount: 1, unit: "paket" },
+      { id: "muz", name: "Muz", amount: 2, unit: "adet" }
+    ],
     steps: [
-      { text: "Muhallebiyi koyulaşana kadar pişirin", timer: 600 },
-      { text: "Bisküvileri rondodan geçirin", timer: 120 },
-      { text: "Bardaklara kat kat bisküvi, muz ve muhallebi dizin", timer: 300 },
+      { text: "Muhallebiyi koyulaşana kadar pişirin", timer: 600, requiredIngredients: ["sut", "seker", "nisasta"] },
+      { text: "Bisküvileri rondodan geçirin", timer: 120, requiredIngredients: ["biskuvi"] },
+      { text: "Bardaklara kat kat bisküvi, muz ve muhallebi dizin", timer: 300, requiredIngredients: ["muz"] },
     ],
   },
-
-  // --- EKSTRALAR ---
+  // --- DİĞER TARİFLER ---
   {
     id: "kumpir",
     name: "Ev Yapımı Kumpir",
     cuisine: "Türk",
     category: "Atıştırmalık",
-    ingredients: ["Büyük Patates", "Kaşar Peyniri", "Tereyağı", "Mısır", "Zeytin"],
-    steps: [
-      { text: "Patatesleri folyoya sarıp fırında közleyin", timer: 3600 },
-      { text: "İçini tereyağı ve peynirle ezip karıştırın", timer: 180 },
-      { text: "Garnitürleri üzerine ekleyin", timer: 120 },
+    ingredients: [
+      { id: "patates", name: "Büyük Patates", amount: 1, unit: "adet" },
+      { id: "kasar", name: "Kaşar Peyniri", amount: 50, unit: "g" },
+      { id: "tereyag", name: "Tereyağı", amount: 1, unit: "yemek kaşığı" },
+      { id: "misir", name: "Mısır", amount: 2, unit: "yemek kaşığı" },
+      { id: "zeytin", name: "Zeytin", amount: 5, unit: "adet" }
     ],
-  },
-  {
-    id: "mantar-sote",
-    name: "Kremalı Mantar Sote",
-    cuisine: "Fransız",
-    category: "Yan Yemek",
-    ingredients: ["Kültür Mantarı", "Krema", "Sarımsak", "Maydanoz"],
     steps: [
-      { text: "Mantarları yüksek ateşte soteleyin", timer: 480 },
-      { text: "Sarımsak ve kremayı ekleyip çektirin", timer: 180 },
-      { text: "Taze maydanozla servis yapın", timer: 30 },
-    ],
-  },
-  {
-    id: "sezar-salata",
-    name: "Tavuklu Sezar Salata",
-    cuisine: "Amerikan",
-    category: "Salata",
-    ingredients: ["Yedikule Marul", "Izgara Tavuk", "Kruton Ekmek", "Parmesan", "Sezar Sos"],
-    steps: [
-      { text: "Tavukları ızgara tavada pişirin", timer: 480 },
-      { text: "Marulları doğrayıp sosla harmanlayın", timer: 180 },
-      { text: "Üzerine tavukları ve ekmekleri ekleyin", timer: 60 },
-    ],
-  },
-  {
-    id: "mercimek-koftesi",
-    name: "Mercimek Köftesi",
-    cuisine: "Türk",
-    category: "Atıştırmalık",
-    ingredients: ["Kırmızı Mercimek", "İnce Bulgur", "Salça", "Taze Soğan", "Maydanoz"],
-    steps: [
-      { text: "Mercimeği haşlayıp bulguru içine ekleyerek dinlendirin", timer: 1200 },
-      { text: "Salçalı sosu hazırlayıp yoğurun", timer: 480 },
-      { text: "Şekil verip marul eşliğinde dizin", timer: 600 },
-    ],
-  },
-  {
-    id: "omlet",
-    name: "Peynirli Fransız Omleti",
-    cuisine: "Fransız",
-    category: "Kahvaltı",
-    ingredients: ["Yumurta", "Tereyağı", "Kaşar Peyniri", "Frenk Soğanı"],
-    steps: [
-      { text: "Yumurtaları pürüzsüz olana kadar çırpın", timer: 60 },
-      { text: "Kısık ateşte tavayı sürekli sallayarak pişirin", timer: 180 },
-      { text: "İçine peyniri koyup rulo şeklinde sarın", timer: 60 },
-    ],
-  },
-  {
-    id: "kisir",
-    name: "Nar Ekşili Kısır",
-    cuisine: "Türk",
-    category: "Atıştırmalık",
-    ingredients: ["İnce Bulgur", "Sıcak Su", "Nar Ekşisi", "Salça", "Yeşillik"],
-    steps: [
-      { text: "Bulguru sıcak suyla ıslatıp şişmesini bekleyin", timer: 600 },
-      { text: "Salça ve baharatları ekleyip iyice yoğurun", timer: 300 },
-      { text: "Yeşillikleri ve nar ekşisini ekleyip karıştırın", timer: 120 },
-    ],
-  },
-  {
-    id: "cacik",
-    name: "Buzlu Cacık",
-    cuisine: "Türk",
-    category: "Yan Yemek",
-    ingredients: ["Yoğurt", "Salatalık", "Sarımsak", "Kuru Nane", "Zeytinyağı"],
-    steps: [
-      { text: "Salatalıkları rendeleyin veya minik küp doğrayın", timer: 180 },
-      { text: "Yoğurt, su ve sarımsakla birleştirin", timer: 120 },
-      { text: "Zeytinyağı ve nane ekleyip servis edin", timer: 30 },
+      { text: "Patatesleri folyoya sarıp fırında közleyin", timer: 3600, requiredIngredients: ["patates"] },
+      { text: "İçini tereyağı ve peynirle ezip karıştırın", timer: 180, requiredIngredients: ["tereyag", "kasar"] },
+      { text: "Garnitürleri üzerine ekleyin", timer: 120, requiredIngredients: ["misir", "zeytin"] },
     ],
   },
   {
@@ -292,83 +237,17 @@ export const RECIPES = [
     name: "Anne Köftesi",
     cuisine: "Türk",
     category: "Ana Yemek",
-    ingredients: ["Kıyma", "Bayat Ekmek", "Soğan", "Maydanoz", "Kimyon"],
-    steps: [
-      { text: "Tüm malzemeleri en az 10 dakika yoğurun", timer: 600 },
-      { text: "Buzdolabında dinlendirin", timer: 1800 },
-      { text: "Tavada veya ızgarada önlü arkalı pişirin", timer: 480 },
+    ingredients: [
+      { id: "kiyma", name: "Kıyma", amount: 500, unit: "g" },
+      { id: "ekmek", name: "Bayat Ekmek", amount: 2, unit: "dilim" },
+      { id: "sogan", name: "Soğan", amount: 1, unit: "adet" },
+      { id: "maydanoz", name: "Maydanoz", amount: 0.5, unit: "demet" },
+      { id: "kimyon", name: "Kimyon", amount: 1, unit: "çay kaşığı" }
     ],
-  },
-  {
-    id: "ispanakli-borek",
-    name: "Hazır Yufkadan Börek",
-    cuisine: "Türk",
-    category: "Hamur İşi",
-    ingredients: ["Yufka", "Ispanak", "Lor Peyniri", "Süt", "Yumurta"],
     steps: [
-      { text: "Ispanaklı harcı hazırlayın", timer: 300 },
-      { text: "Yufkalara sos sürüp iç harcı yerleştirin", timer: 480 },
-      { text: "Fırında üzeri kızarana kadar pişirin", timer: 1800 },
-    ],
-  },
-  {
-    id: "fellah-koftesi",
-    name: "Fellah Köftesi",
-    cuisine: "Türk",
-    category: "Ana Yemek",
-    ingredients: ["İnce Bulgur", "İrmik", "Un", "Sarımsaklı Yoğurt", "Salçalı Sos"],
-    steps: [
-      { text: "Bulgur ve irmiği yoğurup minik toplar yapın", timer: 900 },
-      { text: "Kaynar suda haşlayın", timer: 480 },
-      { text: "Salçalı sarımsaklı sosla harmanlayın", timer: 180 },
-    ],
-  },
-  {
-    id: "sebze-graten",
-    name: "Beşamel Soslu Sebze",
-    cuisine: "Fransız",
-    category: "Yan Yemek",
-    ingredients: ["Karnabahar", "Brokoli", "Süt", "Un", "Kaşar Peyniri"],
-    steps: [
-      { text: "Sebzeleri hafifçe haşlayın", timer: 480 },
-      { text: "Beşamel sosu hazırlayıp üzerine dökün", timer: 300 },
-      { text: "Peynirle birlikte fırınlayın", timer: 900 },
-    ],
-  },
-  {
-    id: "mozaik-pasta",
-    name: "Mozaik Pasta",
-    cuisine: "Türk",
-    category: "Tatlı",
-    ingredients: ["Pötibör Bisküvi", "Kakao", "Süt", "Tereyağı", "Ceviz"],
-    steps: [
-      { text: "Süt, kakao ve yağı eritip karıştırın", timer: 180 },
-      { text: "Bisküvileri kırmadan karışıma ekleyin", timer: 120 },
-      { text: "Dondurucuda donana kadar bekletin", timer: 7200 },
-    ],
-  },
-  {
-    id: "humus",
-    name: "Pastırmalı Humus",
-    cuisine: "Lübnan",
-    category: "Meze",
-    ingredients: ["Nohut", "Tahin", "Limon", "Kimyon", "Pastırma"],
-    steps: [
-      { text: "Haşlanmış nohutları pürüzsüz olana kadar robotta çekin", timer: 300 },
-      { text: "Tahin ve limonu ekleyip kıvam verin", timer: 120 },
-      { text: "Pastırmaları üzerine yakıp sıcak servis edin", timer: 180 },
-    ],
-  },
-  {
-    id: "shakshuka",
-    name: "Şakşuka",
-    cuisine: "Türk",
-    category: "Meze",
-    ingredients: ["Patlıcan", "Kabak", "Patates", "Domates Sosu", "Sarımsak"],
-    steps: [
-      { text: "Tüm sebzeleri küp küp doğrayıp kızartın", timer: 900 },
-      { text: "Sarımsaklı domates sosunu hazırlayın", timer: 300 },
-      { text: "Sebzeleri sosla birleştirin", timer: 60 },
+      { text: "Tüm malzemeleri en az 10 dakika yoğurun", timer: 600, requiredIngredients: ["kiyma", "ekmek", "sogan", "maydanoz", "kimyon"] },
+      { text: "Buzdolabında dinlendirin", timer: 1800, requiredIngredients: [] },
+      { text: "Tavada veya ızgarada önlü arkalı pişirin", timer: 480, requiredIngredients: [] },
     ],
   }
 ];
