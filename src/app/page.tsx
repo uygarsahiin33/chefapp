@@ -85,7 +85,7 @@ export default function Home() {
 
   return (
     <main className={`min-h-screen ${store.isDarkMode ? 'bg-black' : 'bg-[#b00020]'} p-4 flex justify-center items-center font-sans transition-colors duration-500`}>
-      <div className={`${theme.bg} w-full max-w-md h-[92vh] rounded-[3rem] shadow-2xl overflow-hidden flex flex-col relative border-8 ${store.isDarkMode ? 'border-zinc-900' : 'border-white'}`}>
+      <div className={`${theme.bg} w-full max-w-md h-[100dvh] md:h-[92vh] rounded-none md:rounded-[3rem] shadow-2xl overflow-hidden flex flex-col relative border-0 md:border-8 ${store.isDarkMode ? 'border-zinc-900' : 'border-white'} touch-pan-y`}>
         
         <div className="flex-1 overflow-y-auto custom-scrollbar flex flex-col">
           <AnimatePresence mode="wait">
