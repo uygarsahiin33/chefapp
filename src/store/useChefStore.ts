@@ -11,6 +11,10 @@ interface ChefState {
   servings: number;
   isDarkMode: boolean;
   
+  // --- YENİ: KİŞİSELLEŞTİRME ---
+  dietPreference: 'Hepçil' | 'Vegan' | 'Vejetaryen' | 'Ketojenik';
+  userAllergens: string[];
+
   // Timer State
   timerEndTimestamp: number | null;
   isTimerActive: boolean;
@@ -26,6 +30,10 @@ interface ChefState {
   toggleIngredient: (name: string) => void;
   toggleDarkMode: () => void;
   
+  // --- YENİ: AKSİYONLAR ---
+  setDietPreference: (diet: ChefState['dietPreference']) => void;
+  toggleAllergen: (allergen: string) => void;
+
   // Timer Actions
   startGlobalTimer: (seconds: number) => void;
   pauseGlobalTimer: (remaining: number) => void;
@@ -47,6 +55,10 @@ export const useChefStore = create<ChefState>()(
       timerEndTimestamp: null,
       isTimerActive: false,
       pausedRemainingSeconds: null,
+      
+      // Varsayılan Tercihler
+      dietPreference: 'Hepçil',
+      userAllergens: [],
 
       setView: (view) => set({ view }),
       toggleDarkMode: () => set((state) => ({ isDarkMode: !state.isDarkMode })),
@@ -84,6 +96,14 @@ export const useChefStore = create<ChefState>()(
       setServings: (val) => set({ servings: val }),
       toggleIngredient: (name) => set((state) => ({
         selectedIngredients: { ...state.selectedIngredients, [name]: !state.selectedIngredients[name] }
+      })),
+
+      // Yeni Tercih Aksiyonları
+      setDietPreference: (diet) => set({ dietPreference: diet }),
+      toggleAllergen: (allergen) => set((state) => ({
+        userAllergens: state.userAllergens.includes(allergen) 
+          ? state.userAllergens.filter(a => a !== allergen) 
+          : [...state.userAllergens, allergen]
       })),
 
       resetApp: () => set({ 

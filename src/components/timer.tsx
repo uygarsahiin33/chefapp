@@ -22,7 +22,6 @@ export const TimerElement = ({ totalSeconds }: { totalSeconds: number }) => {
       interval = setInterval(() => {
         const remaining = Math.max(0, Math.ceil((timerEndTimestamp - Date.now()) / 1000));
         setDisplaySeconds(remaining);
-        // Alert buradaydı, sildik. Artık page.tsx göz kulak oluyor.
       }, 100);
     } else {
       setDisplaySeconds(pausedRemainingSeconds !== null ? pausedRemainingSeconds : totalSeconds);
@@ -39,9 +38,15 @@ export const TimerElement = ({ totalSeconds }: { totalSeconds: number }) => {
     }
   };
 
+  // --- GÜVENLİ HESAPLAMA ALANI ---
   const circleRadius = 70;
   const circumference = 2 * Math.PI * circleRadius;
+  
+  // Progress hesaplanırken totalSeconds 0 ise veya henüz yüklenmediyse 0 döndürürüz
   const progress = totalSeconds > 0 ? ((totalSeconds - displaySeconds) / totalSeconds) * circumference : 0;
+  
+  // StrokeDashoffset için hesaplanan değerin sayı olduğundan emin oluyoruz (NaN hatasını keser)
+  const safeOffset = isNaN(progress) ? circumference : circumference - progress;
 
   return (
     <div className="relative flex items-center justify-center w-48 h-48 my-4">
@@ -55,7 +60,8 @@ export const TimerElement = ({ totalSeconds }: { totalSeconds: number }) => {
           cx="96" cy="96" r={circleRadius} 
           stroke="#b00020" strokeWidth="8" fill="transparent"
           strokeDasharray={circumference}
-          animate={{ strokeDashoffset: circumference - progress }}
+          // Burada undefined/NaN yerine safeOffset kullanarak hatayı engelledik
+          animate={{ strokeDashoffset: safeOffset }}
           transition={{ duration: 0.5, ease: "linear" }}
           strokeLinecap="round"
         />
